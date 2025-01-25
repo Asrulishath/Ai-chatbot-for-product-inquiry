@@ -17,9 +17,9 @@ function App() {
 
     setLoading(true);
 
-    // Update chat history with user message
+    
     setChatHistory([...chatHistory, { sender: 'user', message: userInput }]);
-    setUserInput(''); // Clear input field
+    setUserInput(''); 
 
     try {
       const response = await fetch('http://localhost:8000/chatbot/respond/', {
@@ -27,7 +27,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userInput }), // Send user input to backend
+        body: JSON.stringify({ message: userInput }),
       });
 
       const data = await response.json();
@@ -35,7 +35,7 @@ function App() {
       if (data.response) {
         setChatHistory((prevChatHistory) => [
           ...prevChatHistory,
-          { sender: 'bot', message: data.response }, // Add bot response to history
+          { sender: 'bot', message: data.response }, 
         ]);
       } else {
         setChatHistory((prevChatHistory) => [

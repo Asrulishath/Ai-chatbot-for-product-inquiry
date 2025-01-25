@@ -11,20 +11,20 @@ class ChatbotResponse(APIView):
     def post(self, request):
         user_input = request.data.get("message", "").strip().lower()
         
-        # Log the received user input
+       
         logger.info(f"Received input: {user_input}")
         
         if not user_input:
             return Response({"error": "No input provided"}, status=400)
 
-        # Predefined responses for greetings
+       
         greetings = ["hi", "hello", "hey"]
         if user_input in greetings:
             response_text = "Hello! How can I assist you today?"
             logger.info(f"Responding with: {response_text}")
             return Response({"response": response_text})
 
-        # Handle queries about products under a specific brand
+      
         if "products under brand" in user_input:
             brand_name = user_input.replace("show me all products under brand", "").strip()
             products = Product.objects.filter(brand__iexact=brand_name)
@@ -34,7 +34,6 @@ class ChatbotResponse(APIView):
             else:
                 response_text = f"Sorry, no products found under the brand '{brand_name}'."
 
-        # Handle queries about specific products
         elif "details of" in user_input or "about" in user_input or "tell me details of" in user_input:
             product_name = user_input.replace("give me details of", "").replace("tell me about", "").replace("tell me details of", "").strip()
             product = Product.objects.filter(name__icontains=product_name).first()
@@ -44,7 +43,7 @@ class ChatbotResponse(APIView):
             else:
                 response_text = f"Sorry, I couldn't find any details for '{product_name}'."
 
-        # Handle supplier queries
+    
         elif "supplier" in user_input or "provides" in user_input:
             if "which suppliers provide" in user_input or "which suppliers have" in user_input:
                 category = user_input.replace("which suppliers provide", "").replace("which suppliers have", "").strip()
@@ -67,7 +66,7 @@ class ChatbotResponse(APIView):
                 else:
                     response_text = f"Sorry, I couldn't find any supplier details for '{product_name}'."
 
-        # Handle "show me all products"
+       
         elif "show me all products" in user_input or "list all products" in user_input or "show all products" in user_input or "all products" in user_input:
             products = Product.objects.all()
             if products.exists():
@@ -76,7 +75,7 @@ class ChatbotResponse(APIView):
             else:
                 response_text = "Sorry, no products are available."
 
-        # Handle category-specific queries like "list all laptops"
+        
         elif "list all" in user_input or "show all" in user_input:
             category = user_input.replace("list all", "").replace("show all", "").strip()
             products = Product.objects.filter(category__icontains=category)
@@ -101,6 +100,6 @@ class ChatbotResponse(APIView):
         
     
 
-        # Log and return the response
+      
         logger.info(f"Responding with: {response_text}")
         return Response({"response": response_text})
